@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library mutable_gist;
-
 import 'dart:async';
 
 import '../elements/bind.dart';
@@ -11,14 +9,14 @@ import 'gists.dart';
 
 /// An overlay on a gist. Used to edit gists, this overlay knows about its dirty
 /// state, and can have dirty state listeners.
-class MutableGist implements PropertyOwner {
+class MutableGist implements PropertyOwner<String?> {
   Gist _backingGist;
   final _localValues = <String, String?>{};
 
   final _files = <String, MutableGistFile>{};
 
   final _dirtyChangedController = StreamController<bool>.broadcast();
-  final _changedController = StreamController.broadcast();
+  final _changedController = StreamController<void>.broadcast();
 
   MutableGist(this._backingGist);
 
@@ -57,7 +55,7 @@ class MutableGist implements PropertyOwner {
 
   Stream<bool> get onDirtyChanged => _dirtyChangedController.stream;
 
-  Stream get onChanged => _changedController.stream;
+  Stream<void> get onChanged => _changedController.stream;
 
   @override
   List<String> get propertyNames {

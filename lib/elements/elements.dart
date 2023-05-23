@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library dart_pad.elements;
-
 import 'dart:async';
 import 'dart:html';
 
@@ -45,7 +43,7 @@ class DElement {
     element.text = value;
   }
 
-  Property get textProperty => _ElementTextProperty(element);
+  Property<String?> get textProperty => _ElementTextProperty(element);
 
   void layoutHorizontal() {
     setAttr('layout');
@@ -267,7 +265,7 @@ class DToast extends DElement {
 }
 
 class GlassPane extends DElement {
-  final _controller = StreamController.broadcast();
+  final _controller = StreamController<void>.broadcast();
 
   GlassPane() : super.tag('div') {
     element.classes.toggle('glass-pane', true);
@@ -293,7 +291,7 @@ class GlassPane extends DElement {
 
   bool get isShowing => document.body!.children.contains(element);
 
-  Stream get onCancel => _controller.stream;
+  Stream<void> get onCancel => _controller.stream;
 }
 
 abstract class DDialog extends DElement {
@@ -359,7 +357,7 @@ abstract class DDialog extends DElement {
   bool get isShowing => document.body!.children.contains(element);
 }
 
-class _ElementTextProperty implements Property {
+class _ElementTextProperty implements Property<String?> {
   final Element element;
 
   _ElementTextProperty(this.element);
@@ -368,13 +366,12 @@ class _ElementTextProperty implements Property {
   String? get() => element.text;
 
   @override
-  void set(value) {
+  void set(String? value) {
     element.text = value == null ? '' : value.toString();
   }
 
-  // TODO:
   @override
-  Stream? get onChanged => null;
+  Stream<String?>? get onChanged => null;
 }
 
 class TabController {
@@ -411,14 +408,16 @@ class TabController {
   Stream<TabElement> get onTabSelect => _selectedTabController.stream;
 }
 
+typedef VoidFunction = void Function();
+
 class TabElement extends DElement {
   final String name;
-  final Function onSelect;
+  final VoidFunction onSelect;
 
   TabElement(super.element, {required this.name, required this.onSelect});
 
   void handleSelected() {
-    onSelect.call();
+    onSelect();
   }
 
   @override

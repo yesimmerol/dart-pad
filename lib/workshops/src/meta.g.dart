@@ -19,7 +19,8 @@ Meta _$MetaFromJson(Map json) => $checkedCreate(
           $checkedConvert(
               'steps',
               (v) => (v as List<dynamic>)
-                  .map((e) => StepConfiguration.fromJson(e as Map))
+                  .map((e) => StepConfiguration.fromJson(
+                      Map<String, dynamic>.from(e as Map)))
                   .toList()),
           type: $checkedConvert(
               'type',

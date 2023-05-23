@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library editor;
-
 import 'dart:html' as html;
 import 'dart:math';
 
@@ -78,7 +76,7 @@ abstract class Editor {
   Stream<html.MouseEvent> get onMouseDown;
 
   /// Fired when the current current vim mode changes.
-  Stream get onVimModeChange;
+  Stream<void> get onVimModeChange;
 
   void resize();
 
@@ -162,7 +160,7 @@ abstract class Document<E extends Editor> {
 
   void applyEdit(SourceEdit edit);
 
-  Stream get onChange;
+  Stream<void> get onChange;
 }
 
 class Annotation implements Comparable<Annotation> {

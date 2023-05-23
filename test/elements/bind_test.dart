@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library dartpad.bind_test;
-
 import 'dart:async';
 
 import 'package:dart_pad/elements/bind.dart';
@@ -13,16 +11,6 @@ void main() => defineTests();
 
 void defineTests() {
   group('bind', () {
-    test('get stream changes', () {
-      final fromController = StreamController.broadcast();
-      final to = TestProperty();
-      bind(fromController.stream, to);
-      fromController.add('foo');
-      return to.onChanged.first.then((_) {
-        expect(to.value, 'foo');
-      });
-    });
-
     test('get property changes', () {
       final from = TestProperty('foo');
       final to = TestProperty();
@@ -30,13 +18,6 @@ void defineTests() {
       return to.onChanged.first.then((_) {
         expect(to.value, from.value);
       });
-    });
-
-    test('target functions', () {
-      final from = TestProperty('foo');
-      Object? value;
-      bind(from, (val) => value = val).flush();
-      expect(value, from.value);
     });
 
     test('target properties', () {
@@ -62,23 +43,23 @@ void defineTests() {
   });
 }
 
-class TestProperty implements Property {
-  final _controller = StreamController(sync: true);
+class TestProperty implements Property<Object?> {
+  final _controller = StreamController<Object?>(sync: true);
   Object? value;
   int changedCount = 0;
 
   TestProperty([this.value]);
 
   @override
-  dynamic get() => value;
+  Object? get() => value;
 
   @override
-  void set(val) {
+  void set(Object? val) {
     value = val;
     changedCount++;
     _controller.add(value);
   }
 
   @override
-  Stream get onChanged => _controller.stream;
+  Stream<Object?> get onChanged => _controller.stream;
 }

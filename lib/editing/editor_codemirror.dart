@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library editor.codemirror;
-
 import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:js';
@@ -35,8 +33,10 @@ class CodeMirrorFactory extends EditorFactory {
   List<String> get themes => CodeMirror.themes;
 
   @override
-  Editor createFromElement(html.Element element,
-      {Map options = codeMirrorOptions}) {
+  Editor createFromElement(
+    html.Element element, {
+    Map<String, Object> options = codeMirrorOptions,
+  }) {
     final editor = CodeMirror.fromElement(element, options: options);
     CodeMirror.addCommand('goLineLeft', _handleGoLineLeft);
     CodeMirror.addCommand('indentIfMultiLineSelectionElseInsertSoftTab',
@@ -72,7 +72,7 @@ class CodeMirrorFactory extends EditorFactory {
   // (this gives us a more typical coding editor behavior)
   void _indentIfMultiLineSelectionElseInsertSoftTab(CodeMirror editor) {
     if (editor.doc.somethingSelected()) {
-      final String? selection = editor.doc.getSelection('\n');
+      final selection = editor.doc.getSelection('\n');
       if (selection != null && selection.contains('\n')) {
         // Multi-line selection
         editor.execCommand('indentMore');
@@ -214,7 +214,7 @@ class _CodeMirrorEditor extends Editor {
   @override
   Map<String, dynamic> startSearch(String query, bool reverse,
       bool highlightOnly, bool matchCase, bool wholeWord, bool regEx) {
-    final JsObject? jsobj = cm.callArgs('searchFromDart', [
+    final jsobj = cm.callArgs('searchFromDart', [
       query,
       reverse,
       highlightOnly,
@@ -252,15 +252,14 @@ class _CodeMirrorEditor extends Editor {
 
   @override
   String? getTokenWeAreOnOrNear([String? regEx]) {
-    final String? foundToken =
-        cm.callArg('getTokenWeAreOnOrNear', regEx) as String?;
+    final foundToken = cm.callArg('getTokenWeAreOnOrNear', regEx) as String?;
     return foundToken;
   }
 
   @override
   Map<String, dynamic> getMatchesFromSearchQueryUpdatedCallback() {
-    final JsObject? jsobj = cm.callArg(
-        'getMatchesFromSearchQueryUpdatedCallback', null) as JsObject?;
+    final jsobj = cm.callArg('getMatchesFromSearchQueryUpdatedCallback', null)
+        as JsObject?;
     if (jsobj != null) {
       return {
         'total': (jsobj['total'] ?? 0) as int,
@@ -348,7 +347,7 @@ class _CodeMirrorEditor extends Editor {
   Stream<html.MouseEvent> get onMouseDown => cm.onMouseDown;
 
   @override
-  Stream get onVimModeChange => cm.onEvent('vim-mode-change');
+  Stream<void> get onVimModeChange => cm.onEvent('vim-mode-change');
 
   @override
   Point getCursorCoords({ed.Position? position}) {
@@ -517,7 +516,7 @@ class _CodeMirrorDocument extends Document<_CodeMirrorEditor> {
       ed.Position(position.line!, position.ch!);
 
   @override
-  Stream get onChange {
+  Stream<void> get onChange {
     return doc.onChange.where((_) {
       if (value != _lastSetValue) {
         _lastSetValue = null;

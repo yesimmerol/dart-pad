@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library dart_pad.ga;
-
 import 'dart:js';
 
 /// Very lightweight Google Analytics integration. This class depends on having
@@ -51,7 +49,7 @@ class Analytics {
     _ga2('send', 'exception', m);
   }
 
-  void _ga(String method, [Map? args]) {
+  void _ga(String method, [Map<String, dynamic>? args]) {
     if (isAvailable) {
       final params = <dynamic>[method];
       if (args != null) params.add(JsObject.jsify(args));
@@ -59,7 +57,7 @@ class Analytics {
     }
   }
 
-  void _ga2(String method, String type, [Map? args]) {
+  void _ga2(String method, String type, [Map<String, dynamic>? args]) {
     if (isAvailable) {
       final params = <dynamic>[method, type];
       if (args != null) params.add(JsObject.jsify(args));
@@ -67,7 +65,8 @@ class Analytics {
     }
   }
 
-  void _ga3(String method, String type, String? arg, [Map? args]) {
+  void _ga3(String method, String type, String? arg,
+      [Map<String, dynamic>? args]) {
     if (isAvailable) {
       final params = <dynamic>[method, type, arg];
       if (args != null) params.add(JsObject.jsify(args));
