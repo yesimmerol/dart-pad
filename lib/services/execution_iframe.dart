@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library execution_iframe;
-
 import 'dart:async';
 import 'dart:html';
 
@@ -29,7 +27,7 @@ class ExecutionServiceIFrame implements ExecutionService {
   ExecutionServiceIFrame(this._frame) {
     final src = _frame.src;
     if (src == null) {
-      throw ('invalid iframe src');
+      throw StateError('invalid iframe src');
     }
     _frameSrc = src;
 
@@ -241,7 +239,7 @@ require(["dartpad_main", "dart_sdk"], function(dartpad_main, dart_sdk) {
   void _initListener() {
     window.addEventListener('message', (event) {
       if (event is MessageEvent) {
-        final data = event.data;
+        final data = (event.data as Map).cast<String, dynamic>();
         if (data['sender'] != 'frame') {
           return;
         }

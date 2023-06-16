@@ -1,5 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: strict_raw_type
+
 part of 'meta.dart';
 
 // **************************************************************************
@@ -19,7 +21,8 @@ Meta _$MetaFromJson(Map json) => $checkedCreate(
           $checkedConvert(
               'steps',
               (v) => (v as List<dynamic>)
-                  .map((e) => StepConfiguration.fromJson(e as Map))
+                  .map((e) => StepConfiguration.fromJson(
+                      Map<String, dynamic>.from(e as Map)))
                   .toList()),
           type: $checkedConvert(
               'type',

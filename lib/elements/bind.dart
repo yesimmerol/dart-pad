@@ -2,26 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library dart_pad.bind;
-
 import 'dart:async';
 
-/// Bind changes from `from` to the target `to`. `from` can be a [Stream] or a
-/// [Property]. `to` can be a [Function] or a [Property].
-Binding bind(from, to) {
-  if (to is! Function && to is! Property) {
-    throw ArgumentError('`to` must be a Function or a Property');
-  }
-
-  // TODO: handle a Function - use polling (and the browser tick event?)
-
-  if (from is Stream) {
-    return _StreamBinding(from, to);
-  } else if (from is Property) {
-    return _PropertyBinding(from, to);
-  } else {
-    throw ArgumentError('`from` must be a Stream or a Property');
-  }
+/// Bind changes from `from` to the target `to`.
+Binding bind<T>(Property<T> from, Property<T> to) {
+  return _PropertyBinding(from, to);
 }
 
 /// A `Property` is able to get its value, change its value, and report changes
@@ -29,34 +14,13 @@ Binding bind(from, to) {
 abstract class Property<T> {
   T get();
   void set(T value);
-  Stream<T?>? get onChanged;
-}
-
-/// A [Property] backed by a getter and setter pair. Currently it cannot report
-/// changes to its value.
-class FunctionProperty implements Property {
-  final Function getter;
-  final Function setter;
-
-  FunctionProperty(this.getter, this.setter);
-
-  @override
-  dynamic get() => getter();
-
-  @override
-  void set(value) {
-    setter(value);
-  }
-
-  // TODO:
-  @override
-  Stream? get onChanged => null;
+  Stream<T>? get onChanged;
 }
 
 /// An object that can own a set of properties.
-abstract class PropertyOwner {
+abstract class PropertyOwner<T> {
   List<String> get propertyNames;
-  Property property(String name);
+  Property<T> property(String name);
 }
 
 /// An instantiation of a binding from one element to another. [Binding]s can be
@@ -72,34 +36,11 @@ abstract class Binding {
   void cancel();
 }
 
-class _StreamBinding implements Binding {
-  final Stream stream;
-  final dynamic target;
+class _PropertyBinding<T> implements Binding {
+  final Property<T> property;
+  final Property<T> target;
 
-  late StreamSubscription _sub;
-
-  _StreamBinding(this.stream, this.target) {
-    _sub = stream.listen(_handleEvent);
-  }
-
-  @override
-  void flush() {}
-
-  @override
-  void cancel() {
-    _sub.cancel();
-  }
-
-  void _handleEvent(e) {
-    _sendTo(target, e);
-  }
-}
-
-class _PropertyBinding implements Binding {
-  final Property property;
-  final dynamic target;
-
-  StreamSubscription? _sub;
+  StreamSubscription<T>? _sub;
 
   _PropertyBinding(this.property, this.target) {
     final stream = property.onChanged;
@@ -114,13 +55,9 @@ class _PropertyBinding implements Binding {
     if (_sub != null) _sub!.cancel();
   }
 
-  void _handleEvent(e) => _sendTo(target, e);
+  void _handleEvent(T e) => _sendTo(target, e);
 }
 
-void _sendTo(target, e) {
-  if (target is Function) {
-    target(e);
-  } else if (target is Property) {
-    if (e != target.get()) target.set(e);
-  }
+void _sendTo<T>(Property<T> target, T e) {
+  if (e != target.get()) target.set(e);
 }

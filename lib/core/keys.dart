@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library core.keys;
-
 import 'dart:async';
 import 'dart:html';
 
@@ -15,7 +13,7 @@ final bool _isMac =
 /// Map key events into commands.
 class Keys {
   final _bindings = <String, Action>{};
-  late StreamSubscription _sub;
+  late StreamSubscription<KeyboardEvent> _sub;
   bool _loggedException = false;
 
   Keys() {
@@ -64,7 +62,7 @@ class Keys {
   bool _handleKey(String key) {
     final action = _bindings[key];
     if (action != null) {
-      Timer.run(() => action());
+      Timer.run(action.call);
       return true;
     }
 
@@ -90,7 +88,7 @@ class Action {
   String toString() => description;
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       other is Action && description == other.description;
 
   @override
@@ -124,7 +122,7 @@ String? makeKeyPresentable(String key) {
     }
     keyAsList = keyAsList.map<String?>((s) {
       if (_unicodeMac.containsKey(s)) {
-        return _unicodeMac[s] as String?;
+        return _unicodeMac[s];
       } else {
         return capitalize(s);
       }
@@ -141,7 +139,7 @@ String? makeKeyPresentable(String key) {
 
 bool isMac() => _isMac;
 
-const Map _codeMap = {
+const Map<int, String> _codeMap = {
   KeyCode.ZERO: '0',
   KeyCode.ONE: '1',
   KeyCode.TWO: '2',
@@ -234,7 +232,7 @@ const Map _codeMap = {
   KeyCode.SHIFT: '', //
 };
 
-const Map _unicodeMac = {
+const Map<String, String> _unicodeMac = {
   'macctrl': '\u2303',
   'alt': '\u2325',
   'shift': '\u21E7',

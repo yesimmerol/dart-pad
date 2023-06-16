@@ -1,11 +1,11 @@
 name: Dart
 
 on:
-  # Run CI on pushes to the master branch, and on PRs against master.
+  # Run CI on pushes to the main branch, and on PRs against main.
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *" # Every day at midnight
@@ -19,14 +19,12 @@ jobs:
       matrix:
         include:
           - sdk: beta
-            # Allow skipping until we support Dart 3:
-            # https://github.com/dart-lang/dart-pad/issues/2467
-            experimental: true
+            experimental: false
           - sdk: stable
             experimental: false
 
     steps:
-      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
       - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
         with:
           sdk: ${{ matrix.sdk }}

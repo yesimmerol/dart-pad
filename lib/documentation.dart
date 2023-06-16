@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library dartpad.documentation;
-
 import 'dart:convert' as convert show htmlEscape;
 import 'dart:html';
 import 'dart:math' as math;
@@ -67,7 +65,7 @@ class DocHandler {
 
     dartServices
         .document(request)
-        .timeout(serviceCallTimeout)
+        .timeout(documentServiceTimeout)
         .then((DocumentResponse result) {
       final hash = result.hashCode;
       // If nothing has changed, don't need to parse Markdown and

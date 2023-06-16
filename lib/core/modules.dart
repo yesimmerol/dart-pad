@@ -2,14 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library core.modules;
-
-// TODO: test
-
 export 'dart:async' show Future;
 
 abstract class Module {
-  Future init();
+  Future<void> init();
 }
 
 /// Maintains a list of active modules.
@@ -31,7 +27,7 @@ class ModuleManager {
 
   bool get started => _started;
 
-  Future start() {
+  Future<void> start() {
     if (_started) return Future.value();
 
     _started = true;
@@ -39,7 +35,7 @@ class ModuleManager {
     return Future.forEach(modules, _startModule);
   }
 
-  Future _startModule(Module module) {
+  Future<void> _startModule(Module module) {
     // TODO: log errors
     return module.init().catchError(print).whenComplete(() {
       _inited.add(module);

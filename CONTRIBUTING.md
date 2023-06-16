@@ -24,7 +24,7 @@ Contributions made by corporations are covered by a different agreement than the
 1) Update the samples first in the dartpad_examples repository: https://github.com/dart-lang/dartpad_examples
 
 2) If you are updating an existing sample, create your own gist based on the existing samples.
-   Gist IDs can be found in the [index file](https://github.com/dart-lang/dart-pad/blob/master/web/index.html#L54).
+   Gist IDs can be found in the [index file](https://github.com/dart-lang/dart-pad/blob/main/web/index.html#L54).
    Fork the gist, if necessary, then update the contents with the new version from dartpad_examples.
  
    Otherwise, use the same gist layout as the samples to make sure that DartPad recognizes it:
@@ -35,7 +35,7 @@ Contributions made by corporations are covered by a different agreement than the
    You can test your gist after updating or creating it by appending the gist ID to the URL for
    dartpad.
  
-3) Add or change sample Gist IDs to the [index file](https://github.com/dart-lang/dart-pad/blob/master/web/index.html#L54),
+3) Add or change sample Gist IDs to the [index file](https://github.com/dart-lang/dart-pad/blob/main/web/index.html#L54),
    and submit a PR for review.
 
 ## How to run DartPad locally
@@ -66,12 +66,11 @@ dart pub get
 # Change the SDK version dart-services serves to the one you currently have installed
 grind update-docker-version
 # Begin serving the backend locally on port 8082.
-grind serve &
+FLUTTER_CHANNEL="stable" grind serve &
 
 cd ../dart-pad
-# Begin serving the front-end locally on port 8000, with the given backend
-export DARTPAD_BACKEND=http://localhost:8082
-grind serve-custom-backend
+# Begin serving the front-end locally on port 8000, with the given backend on the default port 8082 this is defined in tools/grind.dart
+grind serve-local-backend
 ```
 
 You can adjust the DARTPAD_BACKEND variable to match different versions of the dart-pad backend
