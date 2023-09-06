@@ -18,7 +18,7 @@ RUN find /usr/lib/dart -type d -exec chmod 755 {} \;
 # The Flutter tool won't perform its actions when run as root.
 USER dart
 
-COPY --chown=dart:dart pubspec.* /app/
+COPY --chown=dart:dart pubspec.* /app
 RUN dart pub get
 COPY --chown=dart:dart . /app
 RUN dart pub get --offline
@@ -36,9 +36,5 @@ RUN dart pub run grinder build-storage-artifacts validate-storage-artifacts
 # the Dart app using custom script enabling debug modes.
 CMD []
 
-ENTRYPOINT [ \
-  "dart", "bin/server.dart", \
-  "--port", "${PORT}", \
-  "--redis-url", "redis://10.0.0.4:6379", \
-  "--channel", "old" \
-]
+ENTRYPOINT ["dart", "bin/server.dart", "--port", "${PORT}", \
+  "--redis-url", "redis://10.0.0.4:6379", "--channel", "old"]

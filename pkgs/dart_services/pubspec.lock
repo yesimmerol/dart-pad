@@ -228,11 +228,12 @@ packages:
   encrypt:
     dependency: "direct main"
     description:
-      name: encrypt
-      sha256: "4fd4e4fdc21b9d7d4141823e1e6515cd94e7b8d84749504c232999fba25d9bbb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.1"
+      path: "."
+      ref: e7fec759ddceb9c1a8e8d599386ca8b9fc3f28be
+      resolved-ref: e7fec759ddceb9c1a8e8d599386ca8b9fc3f28be
+      url: "https://github.com/leocavalcante/encrypt.git"
+    source: git
+    version: "5.0.2"
   file:
     dependency: transitive
     description:

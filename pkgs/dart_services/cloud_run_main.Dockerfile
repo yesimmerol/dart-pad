@@ -36,9 +36,5 @@ RUN dart pub run grinder build-storage-artifacts validate-storage-artifacts
 # the Dart app using custom script enabling debug modes.
 CMD []
 
-ENTRYPOINT [ \
-  "dart", "bin/server.dart", \
-  "--port", "${PORT}", \
-  "--redis-url", "redis://10.0.0.4:6379", \
-  "--channel", "main" \
-]
+ENTRYPOINT ["dart", "bin/server.dart", "--port", "${PORT}", \
+  "--redis-url", "redis://10.0.0.4:6379", "--channel", "main"]

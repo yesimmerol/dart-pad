@@ -36,3 +36,11 @@ dev_dependencies:
 
 executables:
   services: null
+
+# TODO: Remove after package:encrypt 5.0.2 is published.
+#       https://github.com/leocavalcante/encrypt/issues/310
+dependency_overrides:
+  encrypt:
+    git:
+      url: https://github.com/leocavalcante/encrypt.git
+      ref: e7fec759ddceb9c1a8e8d599386ca8b9fc3f28be

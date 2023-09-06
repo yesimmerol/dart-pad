@@ -77,6 +77,12 @@ dart-services requires the `redis` package, including the `redis-server` binary,
 to be installed to run tests. `sudo apt-get install redis-server` will install
 this on Ubuntu; `brew install redis` for macos. See [Redis' Quick Start guide](https://redis.io/topics/quickstart) for other platforms.
 
+## Building the docker images
+
+```
+docker build -f cloud_run.Dockerfile .
+```
+
 ## Issues and bugs
 
 Please file reports on the
